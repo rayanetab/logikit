@@ -1,0 +1,91 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Asset - {{ asset.brand }} {{ asset.model }}{% endblock %}
+
+{% block body %}
+<div class="mb-6">
+    <h1 class="text-2xl font-bold text-gray-800">{{ asset.brand }} {{ asset.model }}</h1>
+    <p class="text-gray-500">Détail du matériel</p>
+</div>
+
+<div class="bg-white rounded-xl shadow p-6 mb-6">
+    <table class="w-full">
+        <tbody>
+            <tr class="border-b">
+                <th class="py-3 text-left text-gray-500 w-1/3">Numéro de série</th>
+                <td class="py-3">{{ asset.serialNumber }}</td>
+            </tr>
+            <tr class="border-b">
+                <th class="py-3 text-left text-gray-500">Marque</th>
+                <td class="py-3">{{ asset.brand }}</td>
+            </tr>
+            <tr class="border-b">
+                <th class="py-3 text-left text-gray-500">Modèle</th>
+                <td class="py-3">{{ asset.model }}</td>
+            </tr>
+            <tr class="border-b">
+                <th class="py-3 text-left text-gray-500">Statut</th>
+                <td class="py-3">
+                    <span class="px-3 py-1 rounded-full text-sm font-medium
+                        {% if asset.status == 'available' %}bg-green-100 text-green-800
+                        {% elseif asset.status == 'assigned' %}bg-blue-100 text-blue-800
+                        {% elseif asset.status == 'maintenance' %}bg-orange-100 text-orange-800
+                        {% elseif asset.status == 'lost' %}bg-red-100 text-red-800
+                        {% else %}bg-gray-100 text-gray-800{% endif %}">
+                        {{ asset.status }}
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <th class="py-3 text-left text-gray-500">Date de création</th>
+                <td class="py-3">{{ asset.createdAt ? asset.createdAt|date('d/m/Y') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+{# Boutons de transition d'état #}
+<div class="bg-white rounded-xl shadow p-6 mb-6">
+    <h2 class="text-lg font-bold mb-4">Changer l'état</h2>
+    <div class="flex gap-3">
+        {% if asset.status == 'available' %}
+            <a href="{{ path('app_asset_transition', {'id': asset.id, 'transition': 'to_maintenance'}) }}"
+               class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600">
+                Mettre en maintenance
+            </a>
+            <a href="{{ path('app_asset_transition', {'id': asset.id, 'transition': 'mark_lost'}) }}"
+               class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">
+                Marquer perdu
+            </a>
+        {% elseif asset.status == 'assigned' %}
+            <a href="{{ path('app_asset_transition', {'id': asset.id, 'transition': 'return'}) }}"
+               class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">
+                Retourner
+            </a>
+            <a href="{{ path('app_asset_transition', {'id': asset.id, 'transition': 'to_maintenance'}) }}"
+               class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600">
+                Mettre en maintenance
+            </a>
+        {% elseif asset.status == 'maintenance' %}
+            <a href="{{ path('app_asset_transition', {'id': asset.id, 'transition': 'from_maintenance'}) }}"
+               class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">
+                Disponible
+            </a>
+            <a href="{{ path('app_asset_transition', {'id': asset.id, 'transition': 'retire'}) }}"
+               class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600">
+                Mettre au rebut
+            </a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="flex gap-3">
+    <a href="{{ path('app_asset_index') }}" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300">
+        Retour à la liste
+    </a>
+    <a href="{{ path('app_asset_edit', {'id': asset.id}) }}" class="bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-700">
+        Modifier
+    </a>
+    {{ include('asset/_delete_form.html.twig') }}
+</div>
+{% endblock %}

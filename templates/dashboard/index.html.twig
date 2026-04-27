@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard - LogiKit{% endblock %}
+
+{% block body %}
+<div class="mb-6 flex justify-between items-center">
+    <div>
+        <h1 class="text-2xl font-bold text-gray-800">Dashboard</h1>
+        <p class="text-gray-500">Welcome back, here's an overview of your IT assets</p>
+    </div>
+    <a href="/assignment/new" class="bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-700">
+        + New Assignment
+    </a>
+</div>
+
+<div class="grid grid-cols-4 gap-6 mb-8">
+    <div class="bg-white rounded-xl p-6 shadow">
+        <p class="text-gray-500">Total Laptops</p>
+        <p class="text-3xl font-bold mt-2">{{ totalAssets }}</p>
+        <p class="text-green-500 text-sm mt-1">Parc informatique</p>
+    </div>
+    <div class="bg-white rounded-xl p-6 shadow">
+        <p class="text-gray-500">Available Devices</p>
+        <p class="text-3xl font-bold mt-2 text-green-500">{{ availableAssets }}</p>
+        <p class="text-green-500 text-sm mt-1">Disponibles</p>
+    </div>
+    <div class="bg-white rounded-xl p-6 shadow">
+        <p class="text-gray-500">Under Repair</p>
+        <p class="text-3xl font-bold mt-2 text-orange-500">{{ underRepair }}</p>
+        <p class="text-orange-500 text-sm mt-1">En maintenance</p>
+    </div>
+    <div class="bg-white rounded-xl p-6 shadow">
+    <p class="text-gray-500">Stock Alerts</p>
+    <p class="text-3xl font-bold mt-2 text-red-500">{{ stockAlerts }}</p>
+    <p class="text-red-500 text-sm mt-1">Alertes stock</p>
+    </div>
+</div>
+
+<div class="bg-white rounded-xl shadow p-6">
+    <h2 class="text-lg font-bold mb-1">Recent Assignments</h2>
+    <p class="text-gray-500 text-sm mb-4">Latest asset assignments to employees</p>
+    <table class="w-full">
+        <thead>
+            <tr class="text-left text-gray-400 text-sm border-b">
+                <th class="pb-3">EMPLOYEE NAME</th>
+                <th class="pb-3">ASSET MODEL</th>
+                <th class="pb-3">SERIAL NUMBER</th>
+                <th class="pb-3">DATE</th>
+                <th class="pb-3">ACTION</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for assignment in recentAssignments %}
+            <tr class="border-b hover:bg-gray-50">
+                <td class="py-4">{{ assignment.user.prenom }} {{ assignment.user.nom }}</td>
+                <td class="py-4">{{ assignment.asset ? assignment.asset.model : 'Consommable' }}</td>
+                <td class="py-4">
+                    <span class="bg-gray-100 px-2 py-1 rounded text-sm">
+                        {{ assignment.asset ? assignment.asset.serialNumber : '-' }}
+                    </span>
+                </td>
+                <td class="py-4">{{ assignment.assignedAt|date('d/m/Y') }}</td>
+                <td class="py-4">
+                   <a href="{{ path('app_assignment_pdf', {'id': assignment.id}) }}" 
+                    class="bg-gray-900 text-white px-3 py-1 rounded text-sm">
+                Download PDF
+                    </a>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="5" class="text-center text-gray-400 py-8">
+                    Aucune attribution pour le moment
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

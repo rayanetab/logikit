@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Users - LogiKit{% endblock %}
+
+{% block body %}
+<div class="mb-6 flex justify-between items-center">
+    <div>
+        <h1 class="text-2xl font-bold text-gray-800">Utilisateurs</h1>
+        <p class="text-gray-500">Gestion des comptes utilisateurs</p>
+    </div>
+    <a href="{{ path('app_user_new') }}" class="bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-700">
+        + Ajouter un utilisateur
+    </a>
+</div>
+
+<div class="bg-white rounded-xl shadow p-6">
+    <table class="w-full">
+        <thead>
+            <tr class="text-left text-gray-400 text-sm border-b">
+                <th class="pb-3">NOM COMPLET</th>
+                <th class="pb-3">EMAIL</th>
+                <th class="pb-3">RÔLE</th>
+                <th class="pb-3">ACTIONS</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr class="border-b hover:bg-gray-50">
+                <td class="py-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-gray-900 text-white flex items-center justify-center text-sm font-bold">
+                            {{ user.prenom|first }}{{ user.nom|first }}
+                        </div>
+                        <span class="font-medium">{{ user.prenom }} {{ user.nom }}</span>
+                    </div>
+                </td>
+                <td class="py-4 text-gray-500">{{ user.email }}</td>
+                <td class="py-4">
+                    {% for role in user.roles %}
+                        {% if role != 'ROLE_USER' %}
+                        <span class="px-3 py-1 rounded-full text-sm font-medium
+                            {% if role == 'ROLE_ADMIN' %}bg-red-100 text-red-800
+                            {% elseif role == 'ROLE_MANAGER' %}bg-blue-100 text-blue-800
+                            {% else %}bg-gray-100 text-gray-800{% endif %}">
+                            {% if role == 'ROLE_ADMIN' %}Admin IT
+                            {% elseif role == 'ROLE_MANAGER' %}Manager
+                            {% else %}Utilisateur{% endif %}
+                        </span>
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td class="py-4">
+                    <a href="{{ path('app_user_show', {'id': user.id}) }}" 
+                       class="text-blue-600 hover:text-blue-800 mr-3">Voir</a>
+                    <a href="{{ path('app_user_edit', {'id': user.id}) }}" 
+                       class="text-gray-600 hover:text-gray-800">Modifier</a>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="4" class="text-center text-gray-400 py-8">
+                    Aucun utilisateur pour le moment
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

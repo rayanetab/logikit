@@ -1,0 +1,35 @@
+framework:
+    workflows:
+        asset_status:
+            type: 'state_machine'
+            marking_store:
+                type: 'method'
+                property: 'status'
+            supports:
+                - App\Entity\Asset
+            initial_marking: available
+            places:
+                - available
+                - assigned
+                - maintenance
+                - lost
+                - retired
+            transitions:
+                assign:
+                    from: available
+                    to: assigned
+                return:
+                    from: assigned
+                    to: available
+                to_maintenance:
+                    from: [available, assigned]
+                    to: maintenance
+                from_maintenance:
+                    from: maintenance
+                    to: available
+                mark_lost:
+                    from: [available, assigned, maintenance]
+                    to: lost
+                retire:
+                    from: [available, maintenance, lost]
+                    to: retired

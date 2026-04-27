@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; font-size: 12px; margin: 40px; }
+        h1 { text-align: center; font-size: 18px; margin-bottom: 30px; }
+        .header { text-align: center; margin-bottom: 40px; }
+        .section { margin-bottom: 20px; }
+        .section h2 { font-size: 14px; border-bottom: 1px solid #000; padding-bottom: 5px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        table td { padding: 8px; border: 1px solid #ccc; }
+        table td:first-child { font-weight: bold; width: 40%; }
+        .signature { margin-top: 60px; }
+        .signature-box { display: inline-block; width: 45%; margin-right: 5%; }
+        .signature-line { border-top: 1px solid #000; margin-top: 60px; }
+        .footer { text-align: center; margin-top: 40px; font-size: 10px; color: #666; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>DÉCHARGE DE RESPONSABILITÉ</h1>
+    <p>Aggrego-Tech - Agence Digitale Associative</p>
+    <p>Aix-en-Provence</p>
+</div>
+
+<div class="section">
+    <h2>Informations de l'utilisateur</h2>
+    <table>
+        <tr>
+            <td>Nom complet</td>
+            <td>{{ assignment.user.prenom }} {{ assignment.user.nom }}</td>
+        </tr>
+        <tr>
+            <td>Email</td>
+            <td>{{ assignment.user.email }}</td>
+        </tr>
+    </table>
+</div>
+
+<div class="section">
+    <h2>Matériel attribué</h2>
+    <table>
+        {% if assignment.asset %}
+        <tr>
+            <td>Marque / Modèle</td>
+            <td>{{ assignment.asset.brand }} {{ assignment.asset.model }}</td>
+        </tr>
+        <tr>
+            <td>Numéro de série</td>
+            <td>{{ assignment.asset.serialNumber }}</td>
+        </tr>
+        <tr>
+            <td>État au moment de l'attribution</td>
+            <td>{{ assignment.asset.status }}</td>
+        </tr>
+        {% endif %}
+        {% if assignment.consumable %}
+        <tr>
+            <td>Consommable</td>
+            <td>{{ assignment.consumable.name }}</td>
+        </tr>
+        {% endif %}
+    </table>
+</div>
+
+<div class="section">
+    <h2>Détails de l'attribution</h2>
+    <table>
+        <tr>
+            <td>Date d'attribution</td>
+            <td>{{ assignment.assignedAt|date('d/m/Y') }}</td>
+        </tr>
+        <tr>
+            <td>Date de retour prévue</td>
+            <td> {{ assignment.returnedAt ? assignment.returnedAt|date('d/m/Y') : 'Non définie' }}</td>
+        </tr>
+    </table>
+</div>
+
+<div class="section">
+    <h2>Engagement</h2>
+    <p>Je soussigné(e) <strong>{{ assignment.user.prenom }} {{ assignment.user.nom }}</strong>, 
+    reconnais avoir pris en charge le matériel décrit ci-dessus et m'engage à :</p>
+    <ul>
+        <li>En prendre soin et le conserver en bon état</li>
+        <li>Le restituer à la demande de l'organisation</li>
+        <li>Signaler immédiatement toute perte, vol ou dégradation</li>
+        <li>Ne pas l'utiliser à des fins personnelles</li>
+    </ul>
+</div>
+
+<div class="signature">
+    <div class="signature-box">
+        <p>Signature de l'utilisateur :</p>
+        <div class="signature-line"></div>
+        <p>{{ assignment.user.prenom }} {{ assignment.user.nom }}</p>
+    </div>
+    <div class="signature-box">
+        <p>Signature du responsable :</p>
+        <div class="signature-line"></div>
+        <p>Aggrego-Tech</p>
+    </div>
+</div>
+
+<div class="footer">
+    <p>Document généré le {{ "now"|date('d/m/Y H:i') }} - LogiKit © Aggrego-Tech</p>
+</div>
+
+</body>
+</html>

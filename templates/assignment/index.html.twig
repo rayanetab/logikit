@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Assignment index{% endblock %}
+
+{% block body %}
+    <h1>Assignment index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Assigned_at</th>
+                <th>Returned_at</th>
+                <th>Pdf_filename</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for assignment in assignments %}
+            <tr>
+                <td>{{ assignment.id }}</td>
+                <td>{{ assignment.assignedAt ? assignment.assignedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ assignment.returnedAt ? assignment.returnedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ assignment.pdfFilename }}</td>
+                <td>
+                    <a href="{{ path('app_assignment_show', {'id': assignment.id}) }}">show</a>
+                    <a href="{{ path('app_assignment_edit', {'id': assignment.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_assignment_new') }}">Create new</a>
+{% endblock %}

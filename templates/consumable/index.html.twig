@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Consumables - LogiKit{% endblock %}
+
+{% block body %}
+<div class="mb-6 flex justify-between items-center">
+    <div>
+        <h1 class="text-2xl font-bold text-gray-800">Consumables</h1>
+        <p class="text-gray-500">Gestion des consommables et du stock</p>
+    </div>
+    <a href="{{ path('app_consumable_new') }}" class="bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-700">
+        + Ajouter un consommable
+    </a>
+</div>
+
+<div class="bg-white rounded-xl shadow p-6">
+    <table class="w-full">
+        <thead>
+            <tr class="text-left text-gray-400 text-sm border-b">
+                <th class="pb-3">NOM</th>
+                <th class="pb-3">STOCK</th>
+                <th class="pb-3">SEUIL D'ALERTE</th>
+                <th class="pb-3">STATUT STOCK</th>
+                <th class="pb-3">ACTIONS</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for consumable in consumables %}
+            <tr class="border-b hover:bg-gray-50">
+                <td class="py-4 font-medium">{{ consumable.name }}</td>
+                <td class="py-4">{{ consumable.stockQuantity }}</td>
+                <td class="py-4 text-gray-500">{{ consumable.stockAlertThreshold ?? 5 }}</td>
+                <td class="py-4">
+                    {% if consumable.stockQuantity <= (consumable.stockAlertThreshold ?? 5) %}
+                    <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-medium">
+                         Stock faible
+                    </span>
+                    {% else %}
+                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
+                         Stock OK
+                    </span>
+                    {% endif %}
+                </td>
+                <td class="py-4">
+                    <a href="{{ path('app_consumable_show', {'id': consumable.id}) }}" 
+                       class="text-blue-600 hover:text-blue-800 mr-3">Voir</a>
+                    <a href="{{ path('app_consumable_edit', {'id': consumable.id}) }}" 
+                       class="text-gray-600 hover:text-gray-800">Modifier</a>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="5" class="text-center text-gray-400 py-8">
+                    Aucun consommable pour le moment
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
