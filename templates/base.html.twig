@@ -4,10 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}LogiKit{% endblock %}</title>
-    {% block stylesheets %}
-        
-        <script src="https://cdn.tailwindcss.com"></script>
-    {% endblock %}
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100">
 
@@ -20,21 +17,30 @@
                 <p class="text-gray-400 text-sm">Asset Management</p>
             </div>
             <nav class="flex-1 px-4">
-                <a href="/dashboard" class="flex items-center px-4 py-3 rounded-lg mb-1 hover:bg-gray-700 {% if app.request.pathinfo == '/dashboard' %}bg-gray-700{% endif %}">
+                <a href="/dashboard" class="flex items-center px-4 py-3 rounded-lg mb-1 hover:bg-gray-700 text-white">
                     Dashboard
                 </a>
-                <a href="/asset" class="flex items-center px-4 py-3 rounded-lg mb-1 hover:bg-gray-700">
+
+                {% if is_granted('ROLE_USER') %}
+                <a href="/asset" class="flex items-center px-4 py-3 rounded-lg mb-1 hover:bg-gray-700 text-white">
                     Assets Inventory
                 </a>
-                <a href="/consumable" class="flex items-center px-4 py-3 rounded-lg mb-1 hover:bg-gray-700">
+                <a href="/consumable" class="flex items-center px-4 py-3 rounded-lg mb-1 hover:bg-gray-700 text-white">
                     Consumables
                 </a>
-                <a href="/user" class="flex items-center px-4 py-3 rounded-lg mb-1 hover:bg-gray-700">
+                <a href="/assignment" class="flex items-center px-4 py-3 rounded-lg mb-1 hover:bg-gray-700 text-white">
+                    Assignments
+                </a>
+                {% endif %}
+
+                {% if is_granted('ROLE_ADMIN') %}
+                <a href="/user" class="flex items-center px-4 py-3 rounded-lg mb-1 hover:bg-gray-700 text-white">
                     Users
                 </a>
-                <a href="/history" class="flex items-center px-4 py-3 rounded-lg mb-1 hover:bg-gray-700">
+                <a href="/history" class="flex items-center px-4 py-3 rounded-lg mb-1 hover:bg-gray-700 text-white">
                     Audit Logs
                 </a>
+                {% endif %}
             </nav>
         </div>
 
@@ -45,7 +51,7 @@
                 <input type="text" placeholder="Search assets, employees, serial numbers..." 
                        class="w-96 px-4 py-2 border rounded-lg text-gray-600">
                 <div class="flex items-center gap-4">
-                    <span class="text-gray-600">{{ app.user.email ?? '' }}</span>
+                    <span class="text-gray-600">{{ app.user ? app.user.email : '' }}</span>
                     <a href="/logout" class="text-red-500 hover:text-red-700">Logout</a>
                 </div>
             </header>
@@ -58,8 +64,5 @@
 
     </div>
 
-    {% block javascripts %}
-        {{ encore_entry_script_tags('app') }}
-    {% endblock %}
 </body>
 </html>

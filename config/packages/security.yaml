@@ -18,11 +18,17 @@ security:
             custom_authenticator: App\Security\AppCustomAuthenticator
             logout:
                 path: app_logout
+                target: /login
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 604800
                 path: /
 
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/login, roles: PUBLIC_ACCESS }
+        - { path: ^/dashboard, roles: ROLE_USER }
+        - { path: ^/user, roles: ROLE_ADMIN }
+        - { path: ^/asset, roles: ROLE_USER }
+        - { path: ^/consumable, roles: ROLE_USER }
+        - { path: ^/assignment, roles: ROLE_USER }
+        - { path: ^/history, roles: ROLE_ADMIN }

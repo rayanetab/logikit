@@ -1,34 +1,125 @@
-{% extends 'base.html.twig' %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LogiKit - Connexion</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade { animation: fadeInUp 0.6s ease-out; }
+    </style>
+</head>
+<body class="min-h-screen flex">
 
-{% block title %}Log in!{% endblock %}
+    {# Colonne gauche - 40% #}
+    <div class="hidden lg:flex lg:w-2/5 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex-col justify-between p-10">
+        
+        <div>
+       <h1 class="text-5xl font-bold text-white">LogiKit</h1>
+<p class="text-gray-400 mt-1 text-sm">Asset Management</p>      </div>
 
-{% block body %}
-<form method="post">
-    {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
+    <div class="-mt-40">
+    <h2 class="text-2xl font-bold text-white mb-3">
+        💻 Gérez votre parc informatique
+    </h2>
+    <p class="text-gray-400 leading-relaxed text-sm">
+        Suivez vos équipements, attribuez du matériel, générez des documents de décharge et tracez l'historique complet.
+    </p>
 
-    {% if app.user %}
-        <div class="mb-3">
-            You are logged in as {{ app.user.userIdentifier }}, <a href="{{ logout_path() }}">Logout</a>
+            <div class="mt-6 space-y-2">
+                <div class="flex items-center gap-3 text-gray-300 text-sm">
+                    <span class="text-green-400">✓</span>
+                    <span>Gestion du parc en temps réel</span>
+                </div>
+                <div class="flex items-center gap-3 text-gray-300 text-sm">
+                    <span class="text-green-400">✓</span>
+                    <span>Génération automatique de PDF</span>
+                </div>
+                <div class="flex items-center gap-3 text-gray-300 text-sm">
+                    <span class="text-green-400">✓</span>
+                    <span>Historique complet des actions</span>
+                </div>
+                <div class="flex items-center gap-3 text-gray-300 text-sm">
+                    <span class="text-green-400">✓</span>
+                    <span>Alertes stock automatiques</span>
+                </div>
+            </div>
         </div>
-    {% endif %}
 
-    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-    <label for="inputEmail">Email</label>
-    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
-    <label for="inputPassword">Password</label>
-    <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
-    <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
-
-    <div class="checkbox mb-3">
-        <label>
-            <input type="checkbox" name="_remember_me"> Remember me
-        </label>
+        <p class="text-gray-600 text-xs">LogiKit © Aggrego-Tech 2026</p>
     </div>
 
-    <button class="btn btn-lg btn-primary" type="submit">
-        Sign in
-    </button>
-</form>
-{% endblock %}
+    {# Colonne droite - 60% #}
+    <div class="w-full lg:w-3/5 flex items-center justify-center p-8 bg-gray-50">
+        
+        <div class="w-full max-w-lg animate-fade">
+
+            <div class="text-center mb-8 lg:hidden">
+                <h1 class="text-3xl font-bold text-gray-900">LogiKit</h1>
+                <p class="text-gray-500">Asset Management</p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-xl p-10">
+
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">Bienvenue 👋</h2>
+                <p class="text-gray-500 mb-8">Connectez-vous à votre espace</p>
+
+                {% if error %}
+                <div class="bg-red-50 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded-lg mb-6">
+                    <p class="font-medium">Erreur de connexion</p>
+                    <p class="text-sm">{{ error.messageKey|trans(error.messageData, 'security') }}</p>
+                </div>
+                {% endif %}
+
+                <form method="post">
+                    <div class="mb-5">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Adresse email
+                        </label>
+                        <input type="email" name="email" value="{{ last_username }}"
+                               class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-gray-900 transition"
+                               placeholder="votre@email.fr"
+                               autocomplete="email" autofocus>
+                    </div>
+
+                    <div class="mb-5">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Mot de passe
+                        </label>
+                        <input type="password" name="password"
+                               class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-gray-900 transition"
+                               placeholder="••••••••"
+                               autocomplete="current-password">
+                    </div>
+
+                    <div class="flex items-center mb-8">
+                        <input type="checkbox" name="_remember_me" id="remember"
+                               class="w-4 h-4 rounded">
+                        <label for="remember" class="ml-2 text-sm text-gray-600">
+                            Se souvenir de moi
+                        </label>
+                    </div>
+
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                    <button type="submit"
+                            class="w-full bg-gray-900 text-white py-3 rounded-xl font-medium hover:bg-gray-700 transition transform hover:scale-105">
+                        Se connecter →
+                    </button>
+                </form>
+
+            </div>
+
+            <p class="text-center text-gray-400 text-sm mt-6">
+                Aggrego-Tech • Aix-en-Provence
+            </p>
+
+        </div>
+    </div>
+
+</body>
+</html>
