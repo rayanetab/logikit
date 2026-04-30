@@ -3,6 +3,24 @@
 {% block title %}Consumables - LogiKit{% endblock %}
 
 {% block body %}
+{# Bannière alerte stock #}
+{% set hasAlert = false %}
+{% for consumable in consumables %}
+    {% if consumable.stockQuantity <= (consumable.stockAlertThreshold ?? 5) %}
+        {% set hasAlert = true %}
+    {% endif %}
+{% endfor %}
+
+{% if hasAlert %}
+<div class="bg-red-50 border-l-4 border-red-500 text-red-700 px-6 py-4 rounded-xl mb-6 flex items-center gap-3">
+    <span class="text-2xl">⚠️</span>
+    <div>
+        <p class="font-bold">Alerte stock !</p>
+        <p class="text-sm">Un ou plusieurs consommables ont un stock faible. Pensez à les réapprovisionner.</p>
+    </div>
+</div>
+{% endif %}
+
 <div class="mb-6 flex justify-between items-center">
     <div>
         <h1 class="text-2xl font-bold text-gray-800">Consumables</h1>
