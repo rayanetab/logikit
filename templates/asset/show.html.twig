@@ -36,14 +36,21 @@
                     </span>
                 </td>
             </tr>
-            <tr>
-                <th class="py-3 text-left text-gray-500">Date de création</th>
-                <td class="py-3">{{ asset.createdAt ? asset.createdAt|date('d/m/Y') : '' }}</td>
-            </tr>
+           <tr class="border-b">
+    <th class="py-3 text-left text-gray-500">Date de création</th>
+    <td class="py-3">{{ asset.createdAt ? asset.createdAt|date('d/m/Y') : '' }}</td>
+    </tr>
+    <tr class="border-b">
+    <th class="py-3 text-left text-gray-500">Catégorie</th>
+    <td class="py-3">{{ asset.category ?? 'Non défini' }}</td>
+    </tr>
+    <tr>
+    <th class="py-3 text-left text-gray-500">Code barre</th>
+    <td class="py-3">{{ asset.barcode ?? 'Non généré' }}</td>
+    </tr>
         </tbody>
     </table>
 </div>
-
 {# Boutons de transition d'état #}
 <div class="bg-white rounded-xl shadow p-6 mb-6">
     <h2 class="text-lg font-bold mb-4">Changer l'état</h2>

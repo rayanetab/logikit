@@ -84,6 +84,7 @@ php -S localhost:8000 -t public
 ```
 
 **7. Access the application**
+<<<<<<< HEAD
 ## 👤 Default Credentials
 
 | Role | Email | Password |
@@ -119,3 +120,5 @@ Developed using **Scrum methodology** with 3 sprints of 2 weeks:
 L3 Informatique parcours MIAGE - Aix-Marseille Université  
 Stage chez Aggrego-Tech - Aix-en-Provence  
 2025/2026
+=======
+>>>>>>> b1cc64e929fad44c0ddedbfca0a63edf2ea7283c

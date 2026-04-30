@@ -13,11 +13,56 @@
     </a>
 </div>
 
+
+
+{# Filtres #}
+<div class="bg-white rounded-xl shadow p-4 mb-6">
+    <form method="GET" class="flex gap-4 items-center">
+        <select name="category" class="px-3 py-2 border rounded-lg text-sm">
+            <option value="">Toutes catégories</option>
+            <option value="PC" {% if currentCategory == 'PC' %}selected{% endif %}>PC / Laptop</option>
+            <option value="Accessoire" {% if currentCategory == 'Accessoire' %}selected{% endif %}>Accessoire</option>
+            <option value="Ecran" {% if currentCategory == 'Ecran' %}selected{% endif %}>Écran</option>
+            <option value="Telephone" {% if currentCategory == 'Telephone' %}selected{% endif %}>Téléphone</option>
+            <option value="Autre" {% if currentCategory == 'Autre' %}selected{% endif %}>Autre</option>
+        </select>
+
+        <select name="status" class="px-3 py-2 border rounded-lg text-sm">
+            <option value="">Tous statuts</option>
+            <option value="available" {% if currentStatus == 'available' %}selected{% endif %}>Disponible</option>
+            <option value="assigned" {% if currentStatus == 'assigned' %}selected{% endif %}>Attribué</option>
+            <option value="maintenance" {% if currentStatus == 'maintenance' %}selected{% endif %}>Maintenance</option>
+            <option value="lost" {% if currentStatus == 'lost' %}selected{% endif %}>Perdu</option>
+            <option value="retired" {% if currentStatus == 'retired' %}selected{% endif %}>Rebut</option>
+        </select>
+
+        <select name="sort" class="px-3 py-2 border rounded-lg text-sm">
+            <option value="id">Trier par ID</option>
+            <option value="brand" {% if currentSort == 'brand' %}selected{% endif %}>Trier par Marque</option>
+            <option value="status" {% if currentSort == 'status' %}selected{% endif %}>Trier par Statut</option>
+            <option value="category" {% if currentSort == 'category' %}selected{% endif %}>Trier par Catégorie</option>
+        </select>
+
+        <select name="order" class="px-3 py-2 border rounded-lg text-sm">
+            <option value="ASC">Croissant</option>
+            <option value="DESC" {% if currentOrder == 'DESC' %}selected{% endif %}>Décroissant</option>
+        </select>
+
+        <button type="submit" class="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm">
+            Filtrer
+        </button>
+
+        <a href="{{ path('app_asset_index') }}" class="text-gray-500 text-sm hover:text-gray-700">
+            Réinitialiser
+        </a>
+    </form>
+</div>
 <div class="bg-white rounded-xl shadow p-6">
     <table class="w-full">
         <thead>
             <tr class="text-left text-gray-400 text-sm border-b">
                 <th class="pb-3">MARQUE / MODÈLE</th>
+                <th class="pb-3">CATÉGORIE</th>
                 <th class="pb-3">NUMÉRO DE SÉRIE</th>
                 <th class="pb-3">STATUT</th>
                 <th class="pb-3">DATE CRÉATION</th>
@@ -30,7 +75,7 @@
                 <td class="py-4 font-medium">{{ asset.brand }} {{ asset.model }}</td>
                 <td class="py-4">
                     <span class="bg-gray-100 px-2 py-1 rounded text-sm">
-                        {{ asset.serialNumber }}
+                        {{ asset.category ?? 'Non défini' }}
                     </span>
                 </td>
                 <td class="py-4">
@@ -61,4 +106,31 @@
         </tbody>
     </table>
 </div>
+
+{# Pagination #}
+{% if totalPages > 1 %}
+<div class="flex justify-center gap-2 mt-6">
+    {% if currentPage > 1 %}
+    <a href="{{ path('app_asset_index', {'page': currentPage - 1}) }}"
+       class="px-4 py-2 bg-white rounded-lg shadow hover:bg-gray-100">
+        Précédent
+    </a>
+    {% endif %}
+
+    {% for i in 1..totalPages %}
+    <a href="{{ path('app_asset_index', {'page': i}) }}"
+       class="px-4 py-2 rounded-lg shadow
+           {% if i == currentPage %}bg-gray-900 text-white{% else %}bg-white hover:bg-gray-100{% endif %}">
+        {{ i }}
+    </a>
+    {% endfor %}
+
+    {% if currentPage < totalPages %}
+    <a href="{{ path('app_asset_index', {'page': currentPage + 1}) }}"
+       class="px-4 py-2 bg-white rounded-lg shadow hover:bg-gray-100">
+        Suivant
+    </a>
+    {% endif %}
+</div>
+{% endif %}
 {% endblock %}

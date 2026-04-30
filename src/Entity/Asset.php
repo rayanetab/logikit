@@ -6,10 +6,10 @@ use App\Repository\AssetRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-
-#[ORM\Entity(repositoryClass: AssetRepository::class)]
-class Asset
-{
+        #[ORM\Entity(repositoryClass: AssetRepository::class)]
+        #[ORM\HasLifecycleCallbacks]
+    class Asset
+    {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -42,6 +42,12 @@ class Asset
     #[ORM\OneToMany(targetEntity: History::class, mappedBy: 'asset')]
     private Collection $histories;
 
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $Category = null;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $barcode = null;
+
     public function __construct()
     {
         $this->no = new ArrayCollection();
@@ -58,11 +64,21 @@ class Asset
         return $this->serial_number;
     }
 
+
+
     public function setSerialNumber(string $serial_number): static
     {
-        $this->serial_number = $serial_number;
+    $this->serial_number = $serial_number;
+    return $this;
+    }
 
-        return $this;
+  #[ORM\PrePersist]
+  #[ORM\PreUpdate]
+    public function generateBarcode(): void
+    {
+       if ($this->barcode === null) {
+        $this->barcode = strtoupper(substr($this->category ?? 'AST', 0, 3)) . '-' . date('Y') . '-' . rand(1000, 9999);
+    }
     }
 
     public function getBrand(): ?string
@@ -169,6 +185,30 @@ class Asset
                 $history->setAsset(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCategory(): ?string
+    {
+        return $this->Category;
+    }
+
+    public function setCategory(?string $Category): static
+    {
+        $this->Category = $Category;
+
+        return $this;
+    }
+
+    public function getBarcode(): ?string
+    {
+        return $this->barcode;
+    }
+
+    public function setBarcode(?string $barcode): static
+    {
+        $this->barcode = $barcode;
 
         return $this;
     }
