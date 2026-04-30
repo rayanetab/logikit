@@ -33,12 +33,36 @@ class DashboardController extends AbstractController
             }
         }
 
+        // Statistiques annuelles - attributions par mois
+        $allAssignments = $assignmentRepository->findAll();
+        $monthlyStats = array_fill(1, 12, 0);
+        foreach ($allAssignments as $assignment) {
+            if ($assignment->getAssignedAt()) {
+                $month = (int) $assignment->getAssignedAt()->format('m');
+                $year = (int) $assignment->getAssignedAt()->format('Y');
+                if ($year == date('Y')) {
+                    $monthlyStats[$month]++;
+                }
+            }
+        }
+
+        // Stats par statut
+        $statusStats = [
+            'available' => count($assetRepository->findBy(['status' => 'available'])),
+            'assigned' => count($assetRepository->findBy(['status' => 'assigned'])),
+            'maintenance' => count($assetRepository->findBy(['status' => 'maintenance'])),
+            'lost' => count($assetRepository->findBy(['status' => 'lost'])),
+            'retired' => count($assetRepository->findBy(['status' => 'retired'])),
+        ];
+
         return $this->render('dashboard/index.html.twig', [
             'totalAssets' => $totalAssets,
             'availableAssets' => $availableAssets,
             'underRepair' => $underRepair,
             'stockAlerts' => $stockAlerts,
             'recentAssignments' => $recentAssignments,
+            'monthlyStats' => array_values($monthlyStats),
+            'statusStats' => $statusStats,
         ]);
     }
 }

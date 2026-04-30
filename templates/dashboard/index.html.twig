@@ -77,4 +77,62 @@
         </tbody>
     </table>
 </div>
+{# Statistiques annuelles #}
+<div class="grid grid-cols-2 gap-6 mt-6">
+
+    {# Graphique attributions par mois #}
+    <div class="bg-white rounded-xl shadow p-6">
+        <h2 class="text-lg font-bold mb-4">Attributions par mois ({{ "now"|date('Y') }})</h2>
+        <canvas id="monthlyChart"></canvas>
+    </div>
+
+    {# Graphique répartition par statut #}
+    <div class="bg-white rounded-xl shadow p-6">
+        <h2 class="text-lg font-bold mb-4">Répartition du matériel par statut</h2>
+        <canvas id="statusChart"></canvas>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Graphique mensuel
+    const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
+    new Chart(monthlyCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'],
+            datasets: [{
+                label: 'Attributions',
+                data: {{ monthlyStats|json_encode|raw }},
+                backgroundColor: 'rgba(17, 24, 39, 0.8)',
+                borderRadius: 5,
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } }
+        }
+    });
+
+    // Graphique statuts
+    const statusCtx = document.getElementById('statusChart').getContext('2d');
+    new Chart(statusCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Disponible', 'Attribué', 'Maintenance', 'Perdu', 'Rebut'],
+            datasets: [{
+                data: [
+                    {{ statusStats.available }},
+                    {{ statusStats.assigned }},
+                    {{ statusStats.maintenance }},
+                    {{ statusStats.lost }},
+                    {{ statusStats.retired }}
+                ],
+                backgroundColor: ['#10b981', '#3b82f6', '#f97316', '#ef4444', '#6b7280'],
+            }]
+        },
+        options: { responsive: true }
+    });
+</script>
 {% endblock %}
