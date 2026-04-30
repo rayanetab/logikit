@@ -73,22 +73,23 @@
             {% for asset in assets %}
             <tr class="border-b hover:bg-gray-50">
                 <td class="py-4 font-medium">{{ asset.brand }} {{ asset.model }}</td>
-                <td class="py-4">
-                    <span class="bg-gray-100 px-2 py-1 rounded text-sm">
-                        {{ asset.category ?? 'Non défini' }}
-                    </span>
-                </td>
-                <td class="py-4">
-                    <span class="px-3 py-1 rounded-full text-sm font-medium
-                        {% if asset.status == 'available' %}bg-green-100 text-green-800
-                        {% elseif asset.status == 'assigned' %}bg-blue-100 text-blue-800
-                        {% elseif asset.status == 'maintenance' %}bg-orange-100 text-orange-800
-                        {% elseif asset.status == 'lost' %}bg-red-100 text-red-800
-                        {% else %}bg-gray-100 text-gray-800{% endif %}">
-                        {{ asset.status }}
-                    </span>
-                </td>
-                <td class="py-4 text-gray-500">{{ asset.createdAt ? asset.createdAt|date('d/m/Y') : '' }}</td>
+<td class="py-4">
+    <span class="bg-gray-100 px-2 py-1 rounded text-sm">
+        {{ asset.category ?? 'Non défini' }}
+    </span>
+</td>
+<td class="py-4">{{ asset.serialNumber }}</td>
+<td class="py-4">
+    <span class="px-3 py-1 rounded-full text-sm font-medium
+        {% if asset.status == 'available' %}bg-green-100 text-green-800
+        {% elseif asset.status == 'assigned' %}bg-blue-100 text-blue-800
+        {% elseif asset.status == 'maintenance' %}bg-orange-100 text-orange-800
+        {% elseif asset.status == 'lost' %}bg-red-100 text-red-800
+        {% else %}bg-gray-100 text-gray-800{% endif %}">
+        {{ asset.status }}
+    </span>
+</td>
+<td class="py-4 text-gray-500">{{ asset.createdAt ? asset.createdAt|date('d/m/Y') : '' }}</td>
                 <td class="py-4">
                     <a href="{{ path('app_asset_show', {'id': asset.id}) }}" 
                        class="text-blue-600 hover:text-blue-800 mr-3">Voir</a>

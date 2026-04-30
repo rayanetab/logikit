@@ -15,13 +15,23 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/assignment')]
 final class AssignmentController extends AbstractController
 {
-    #[Route(name: 'app_assignment_index', methods: ['GET'])]
-    public function index(AssignmentRepository $assignmentRepository): Response
-    {
-        return $this->render('assignment/index.html.twig', [
-            'assignments' => $assignmentRepository->findAll(),
-        ]);
-    }
+   #[Route(name: 'app_assignment_index', methods: ['GET'])]
+public function index(AssignmentRepository $assignmentRepository, Request $request): Response
+{
+    $page = $request->query->getInt('page', 1);
+    $limit = 5;
+    $offset = ($page - 1) * $limit;
+
+    $assignments = $assignmentRepository->findBy([], ['assigned_at' => 'DESC'], $limit, $offset);
+    $total = count($assignmentRepository->findAll());
+    $totalPages = ceil($total / $limit);
+
+    return $this->render('assignment/index.html.twig', [
+        'assignments' => $assignments,
+        'currentPage' => $page,
+        'totalPages' => $totalPages,
+    ]);
+}
 
     #[Route('/new', name: 'app_assignment_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager, \Symfony\Component\Workflow\WorkflowInterface $assetStatusStateMachine): Response

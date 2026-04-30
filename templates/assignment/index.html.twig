@@ -1,39 +1,86 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Assignment index{% endblock %}
+{% block title %}Assignments - LogiKit{% endblock %}
 
 {% block body %}
-    <h1>Assignment index</h1>
+<div class="mb-6 flex justify-between items-center">
+    <div>
+        <h1 class="text-2xl font-bold text-gray-800">Attributions</h1>
+        <p class="text-gray-500">Gestion des attributions de matériel</p>
+    </div>
+    <a href="{{ path('app_assignment_new') }}" class="bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-700">
+        + Nouvelle attribution
+    </a>
+</div>
 
-    <table class="table">
+<div class="bg-white rounded-xl shadow p-6">
+    <table class="w-full">
         <thead>
-            <tr>
-                <th>Id</th>
-                <th>Assigned_at</th>
-                <th>Returned_at</th>
-                <th>Pdf_filename</th>
-                <th>actions</th>
+            <tr class="text-left text-gray-400 text-sm border-b">
+                <th class="pb-3">EMPLOYÉ</th>
+                <th class="pb-3">MATÉRIEL</th>
+                <th class="pb-3">NUMÉRO DE SÉRIE</th>
+                <th class="pb-3">DATE ATTRIBUTION</th>
+                <th class="pb-3">DATE RETOUR</th>
+                <th class="pb-3">ACTION</th>
             </tr>
         </thead>
         <tbody>
-        {% for assignment in assignments %}
-            <tr>
-                <td>{{ assignment.id }}</td>
-                <td>{{ assignment.assignedAt ? assignment.assignedAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ assignment.returnedAt ? assignment.returnedAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ assignment.pdfFilename }}</td>
-                <td>
-                    <a href="{{ path('app_assignment_show', {'id': assignment.id}) }}">show</a>
-                    <a href="{{ path('app_assignment_edit', {'id': assignment.id}) }}">edit</a>
+            {% for assignment in assignments %}
+            <tr class="border-b hover:bg-gray-50">
+                <td class="py-4">{{ assignment.user ? assignment.user.prenom ~ ' ' ~ assignment.user.nom : '-' }}</td>
+                <td class="py-4">{{ assignment.asset ? assignment.asset.brand ~ ' ' ~ assignment.asset.model : 'Consommable' }}</td>
+                <td class="py-4">
+                    <span class="bg-gray-100 px-2 py-1 rounded text-sm">
+                        {{ assignment.asset ? assignment.asset.serialNumber : '-' }}
+                    </span>
+                </td>
+                <td class="py-4 text-gray-500">{{ assignment.assignedAt ? assignment.assignedAt|date('d/m/Y') : '' }}</td>
+                <td class="py-4 text-gray-500">{{ assignment.returnedAt ? assignment.returnedAt|date('d/m/Y') : 'Non définie' }}</td>
+                <td class="py-4">
+                    <a href="{{ path('app_assignment_pdf', {'id': assignment.id}) }}" 
+                       class="bg-gray-900 text-white px-3 py-1 rounded text-sm">
+                        PDF
+                    </a>
+                    <a href="{{ path('app_assignment_edit', {'id': assignment.id}) }}" 
+                       class="text-gray-600 hover:text-gray-800 ml-2">Modifier</a>
                 </td>
             </tr>
-        {% else %}
+            {% else %}
             <tr>
-                <td colspan="5">no records found</td>
+                <td colspan="6" class="text-center text-gray-400 py-8">
+                    Aucune attribution pour le moment
+                </td>
             </tr>
-        {% endfor %}
+            {% endfor %}
         </tbody>
     </table>
+</div>
 
-    <a href="{{ path('app_assignment_new') }}">Create new</a>
+{# Pagination #}
+{% if totalPages > 1 %}
+<div class="flex justify-center gap-2 mt-6">
+    {% if currentPage > 1 %}
+    <a href="{{ path('app_assignment_index', {'page': currentPage - 1}) }}"
+       class="px-4 py-2 bg-white rounded-lg shadow hover:bg-gray-100">
+        Précédent
+    </a>
+    {% endif %}
+
+    {% for i in 1..totalPages %}
+    <a href="{{ path('app_assignment_index', {'page': i}) }}"
+       class="px-4 py-2 rounded-lg shadow
+           {% if i == currentPage %}bg-gray-900 text-white{% else %}bg-white hover:bg-gray-100{% endif %}">
+        {{ i }}
+    </a>
+    {% endfor %}
+
+    {% if currentPage < totalPages %}
+    <a href="{{ path('app_assignment_index', {'page': currentPage + 1}) }}"
+       class="px-4 py-2 bg-white rounded-lg shadow hover:bg-gray-100">
+        Suivant
+    </a>
+    {% endif %}
+</div>
+{% endif %}
 {% endblock %}
