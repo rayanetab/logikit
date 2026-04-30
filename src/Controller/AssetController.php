@@ -65,6 +65,16 @@ public function index(AssetRepository $assetRepository, Request $request): Respo
         ]);
     }
 
+    #[Route('/maintenance', name: 'app_asset_maintenance', methods: ['GET'])]
+public function maintenance(AssetRepository $assetRepository): Response
+{
+    $assets = $assetRepository->findBy(['status' => 'maintenance']);
+
+    return $this->render('asset/maintenance.html.twig', [
+        'assets' => $assets,
+    ]);
+}
+
     #[Route('/{id}', name: 'app_asset_show', methods: ['GET'])]
     public function show(Asset $asset): Response
     {
@@ -132,5 +142,7 @@ public function transition(Asset $asset, string $transition, \Symfony\Component\
         'Content-Type' => 'image/png',
     ]);
 }
+
+
 
 }
