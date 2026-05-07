@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Repository\AssetRepository;
 use App\Repository\ConsumableRepository;
 use App\Repository\AssignmentRepository;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -17,13 +18,17 @@ class DashboardController extends AbstractController
     public function index(
         AssetRepository $assetRepository,
         ConsumableRepository $consumableRepository,
-        AssignmentRepository $assignmentRepository
+        AssignmentRepository $assignmentRepository,
+        UserRepository $userRepository
     ): Response
     {
+        $user = $this->getUser();
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
+        $isManager = $this->isGranted('ROLE_MANAGER');
+
         $totalAssets = count($assetRepository->findAll());
         $availableAssets = count($assetRepository->findBy(['status' => 'available']));
         $underRepair = count($assetRepository->findBy(['status' => 'maintenance']));
-        $recentAssignments = $assignmentRepository->findBy([], ['assigned_at' => 'DESC'], 5);
 
         $stockAlerts = 0;
         foreach ($consumableRepository->findAll() as $consumable) {
@@ -33,7 +38,18 @@ class DashboardController extends AbstractController
             }
         }
 
-        // Statistiques annuelles - attributions par mois
+        // Attributions récentes selon le rôle
+        if ($isAdmin) {
+            $recentAssignments = $assignmentRepository->findBy([], ['assigned_at' => 'DESC'], 5);
+        } else {
+            $recentAssignments = $assignmentRepository->findBy(
+                ['user' => $user],
+                ['assigned_at' => 'DESC'],
+                5
+            );
+        }
+
+        // Statistiques annuelles
         $allAssignments = $assignmentRepository->findAll();
         $monthlyStats = array_fill(1, 12, 0);
         foreach ($allAssignments as $assignment) {
@@ -46,7 +62,6 @@ class DashboardController extends AbstractController
             }
         }
 
-        // Stats par statut
         $statusStats = [
             'available' => count($assetRepository->findBy(['status' => 'available'])),
             'assigned' => count($assetRepository->findBy(['status' => 'assigned'])),
@@ -63,6 +78,8 @@ class DashboardController extends AbstractController
             'recentAssignments' => $recentAssignments,
             'monthlyStats' => array_values($monthlyStats),
             'statusStats' => $statusStats,
+            'isAdmin' => $isAdmin,
+            'isManager' => $isManager,
         ]);
     }
 }
