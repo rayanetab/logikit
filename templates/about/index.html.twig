@@ -1,0 +1,95 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}À propos - LogiKit{% endblock %}
+
+{% block body %}
+<div class="mb-6">
+    <h1 class="text-2xl font-bold text-gray-800">À propos de LogiKit</h1>
+    <p class="text-gray-500">Informations sur l'application</p>
+</div>
+
+{# Logo et description #}
+<div class="bg-gray-900 text-white rounded-xl shadow p-8 mb-6 text-center">
+    <h1 class="text-5xl font-bold mb-2">LogiKit</h1>
+    <p class="text-gray-400 text-lg">Asset Management Platform</p>
+    <p class="text-gray-500 mt-4 max-w-xl mx-auto">
+        Application web de gestion de parc informatique développée pour Aggrego-Tech.
+        Centralisez, suivez et gérez vos équipements en temps réel.
+    </p>
+    <span class="mt-4 inline-block bg-gray-700 text-gray-300 px-4 py-2 rounded-full text-sm">
+        Version 1.0.0
+    </span>
+</div>
+
+{# Fonctionnalités #}
+<div class="grid grid-cols-3 gap-6 mb-6">
+    <div class="bg-white rounded-xl shadow p-6">
+        <div class="text-3xl mb-3">💻</div>
+        <h3 class="font-bold mb-2">Gestion des assets</h3>
+        <p class="text-gray-500 text-sm">Inventaire complet du matériel avec suivi des états et code barre automatique.</p>
+    </div>
+    <div class="bg-white rounded-xl shadow p-6">
+        <div class="text-3xl mb-3">📋</div>
+        <h3 class="font-bold mb-2">Attributions</h3>
+        <p class="text-gray-500 text-sm">Attribution du matériel aux employés avec génération automatique de PDF de décharge.</p>
+    </div>
+    <div class="bg-white rounded-xl shadow p-6">
+        <div class="text-3xl mb-3">📊</div>
+        <h3 class="font-bold mb-2">Statistiques</h3>
+        <p class="text-gray-500 text-sm">Dashboard dynamique avec graphiques et statistiques en temps réel.</p>
+    </div>
+    <div class="bg-white rounded-xl shadow p-6">
+        <div class="text-3xl mb-3">🔒</div>
+        <h3 class="font-bold mb-2">Sécurité</h3>
+        <p class="text-gray-500 text-sm">Gestion des rôles (Admin IT, Manager, Utilisateur) avec accès sécurisés.</p>
+    </div>
+    <div class="bg-white rounded-xl shadow p-6">
+        <div class="text-3xl mb-3">📝</div>
+        <h3 class="font-bold mb-2">Audit Trail</h3>
+        <p class="text-gray-500 text-sm">Historique complet de toutes les actions effectuées sur le matériel.</p>
+    </div>
+    <div class="bg-white rounded-xl shadow p-6">
+        <div class="text-3xl mb-3">⚠️</div>
+        <h3 class="font-bold mb-2">Alertes stock</h3>
+        <p class="text-gray-500 text-sm">Alertes automatiques quand le stock de consommables est faible.</p>
+    </div>
+</div>
+
+{# Stack technique #}
+<div class="bg-white rounded-xl shadow p-6 mb-6">
+    <h2 class="text-lg font-bold mb-4">🛠️ Stack technique</h2>
+    <div class="grid grid-cols-4 gap-4">
+        <div class="text-center p-4 bg-gray-50 rounded-xl">
+            <p class="font-bold">PHP 8.3</p>
+            <p class="text-gray-500 text-sm">Langage</p>
+        </div>
+        <div class="text-center p-4 bg-gray-50 rounded-xl">
+            <p class="font-bold">Symfony 7</p>
+            <p class="text-gray-500 text-sm">Framework</p>
+        </div>
+        <div class="text-center p-4 bg-gray-50 rounded-xl">
+            <p class="font-bold">MySQL</p>
+            <p class="text-gray-500 text-sm">Base de données</p>
+        </div>
+        <div class="text-center p-4 bg-gray-50 rounded-xl">
+            <p class="font-bold">Tailwind CSS</p>
+            <p class="text-gray-500 text-sm">Frontend</p>
+        </div>
+    </div>
+</div>
+
+{# Développeur #}
+<div class="bg-white rounded-xl shadow p-6">
+    <h2 class="text-lg font-bold mb-4">👨‍💻 Développeur</h2>
+    <div class="flex items-center gap-4">
+        <div class="w-16 h-16 rounded-full bg-gray-900 text-white flex items-center justify-center text-2xl font-bold">
+            RT
+        </div>
+        <div>
+            <p class="font-bold text-lg">Rayane Tabouri</p>
+            <p class="text-gray-500">L3 Informatique parcours MIAGE - Université Aix-Marseille</p>
+            <p class="text-gray-500">Stage chez Aggrego-Tech - Aix-en-Provence - 2026</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
