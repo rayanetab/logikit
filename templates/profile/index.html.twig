@@ -11,21 +11,37 @@
 {# Infos utilisateur #}
 <div class="bg-white rounded-xl shadow p-6 mb-6">
     <div class="flex items-center gap-6">
-        <div class="w-16 h-16 rounded-full bg-gray-900 text-white flex items-center justify-center text-2xl font-bold">
+        <div class="w-20 h-20 rounded-full bg-gray-900 text-white flex items-center justify-center text-3xl font-bold">
             {{ user.prenom|first }}{{ user.nom|first }}
         </div>
         <div>
-            <h2 class="text-xl font-bold">{{ user.prenom }} {{ user.nom }}</h2>
+            <h2 class="text-2xl font-bold">{{ user.prenom }} {{ user.nom }}</h2>
             <p class="text-gray-500">{{ user.email }}</p>
-            <span class="px-3 py-1 rounded-full text-sm font-medium
+            <span class="px-3 py-1 rounded-full text-sm font-medium mt-2 inline-block
                 {% if 'ROLE_ADMIN' in user.roles %}bg-red-100 text-red-800
                 {% elseif 'ROLE_MANAGER' in user.roles %}bg-blue-100 text-blue-800
                 {% else %}bg-gray-100 text-gray-800{% endif %}">
-                {% if 'ROLE_ADMIN' in user.roles %}Admin IT
-                {% elseif 'ROLE_MANAGER' in user.roles %}Manager
-                {% else %}Utilisateur{% endif %}
+                {% if 'ROLE_ADMIN' in user.roles %}👑 Admin IT
+                {% elseif 'ROLE_MANAGER' in user.roles %}👔 Manager
+                {% else %}👤 Utilisateur{% endif %}
             </span>
         </div>
+    </div>
+</div>
+
+{# Stats #}
+<div class="grid grid-cols-3 gap-6 mb-6">
+    <div class="bg-white rounded-xl shadow p-6 text-center">
+        <p class="text-gray-500 text-sm">Total attributions</p>
+        <p class="text-3xl font-bold mt-2">{{ totalAssignments }}</p>
+    </div>
+    <div class="bg-white rounded-xl shadow p-6 text-center">
+        <p class="text-gray-500 text-sm">En cours</p>
+        <p class="text-3xl font-bold mt-2 text-blue-500">{{ activeAssignments }}</p>
+    </div>
+    <div class="bg-white rounded-xl shadow p-6 text-center">
+        <p class="text-gray-500 text-sm">Retournées</p>
+        <p class="text-3xl font-bold mt-2 text-green-500">{{ returnedAssignments }}</p>
     </div>
 </div>
 
@@ -38,16 +54,26 @@
                 <th class="pb-3">MATÉRIEL</th>
                 <th class="pb-3">NUMÉRO DE SÉRIE</th>
                 <th class="pb-3">DATE ATTRIBUTION</th>
-                <th class="pb-3">DATE RETOUR</th>
+                <th class="pb-3">STATUT</th>
             </tr>
         </thead>
         <tbody>
             {% for assignment in assignments %}
             <tr class="border-b hover:bg-gray-50">
                 <td class="py-4 font-medium">{{ assignment.asset ? assignment.asset.brand ~ ' ' ~ assignment.asset.model : 'Consommable' }}</td>
-                <td class="py-4">{{ assignment.asset ? assignment.asset.serialNumber : '-' }}</td>
+                <td class="py-4">
+                    <span class="bg-gray-100 px-2 py-1 rounded text-sm">
+                        {{ assignment.asset ? assignment.asset.serialNumber : '-' }}
+                    </span>
+                </td>
                 <td class="py-4 text-gray-500">{{ assignment.assignedAt ? assignment.assignedAt|date('d/m/Y') : '' }}</td>
-                <td class="py-4 text-gray-500">{{ assignment.returnedAt ? assignment.returnedAt|date('d/m/Y') : 'En cours' }}</td>
+                <td class="py-4">
+                    {% if assignment.returnedAt %}
+                    <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">Retourné</span>
+                    {% else %}
+                    <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">En cours</span>
+                    {% endif %}
+                </td>
             </tr>
             {% else %}
             <tr>
