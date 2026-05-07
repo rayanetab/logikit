@@ -5,46 +5,88 @@
 {% block body %}
 <div class="mb-6 flex justify-between items-center">
     <div>
-        <h1 class="text-2xl font-bold text-gray-800">Dashboard</h1>
-        <p class="text-gray-500">Welcome back, here's an overview of your IT assets</p>
+        <h1 class="text-2xl font-bold text-gray-800">Tableau de bord</h1>
+        <p class="text-gray-500">Bienvenue, voici un aperçu de votre parc informatique</p>
     </div>
     <a href="/assignment/new" class="bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-700">
-        + New Assignment
+        + Nouvelle attribution
     </a>
 </div>
 
+{# Cards stats #}
 <div class="grid grid-cols-4 gap-6 mb-8">
-    <div class="bg-white rounded-xl p-6 shadow">
-        <p class="text-gray-500">Total Laptops</p>
-        <p class="text-3xl font-bold mt-2">{{ totalAssets }}</p>
-        <p class="text-green-500 text-sm mt-1">Parc informatique</p>
+    <div class="bg-white rounded-xl p-6 shadow hover:shadow-md transition">
+        <div class="flex justify-between items-start">
+            <div>
+                <p class="text-gray-500 text-sm">Total Matériel</p>
+                <p class="text-3xl font-bold mt-2">{{ totalAssets }}</p>
+                <p class="text-gray-400 text-sm mt-1">Parc informatique</p>
+            </div>
+            <span class="text-3xl">💻</span>
+        </div>
     </div>
-    <div class="bg-white rounded-xl p-6 shadow">
-        <p class="text-gray-500">Available Devices</p>
-        <p class="text-3xl font-bold mt-2 text-green-500">{{ availableAssets }}</p>
-        <p class="text-green-500 text-sm mt-1">Disponibles</p>
+    <div class="bg-white rounded-xl p-6 shadow hover:shadow-md transition">
+        <div class="flex justify-between items-start">
+            <div>
+                <p class="text-gray-500 text-sm">Disponibles</p>
+                <p class="text-3xl font-bold mt-2 text-green-500">{{ availableAssets }}</p>
+                <p class="text-green-400 text-sm mt-1">Prêts à l'attribution</p>
+            </div>
+            <span class="text-3xl">✅</span>
+        </div>
     </div>
-    <div class="bg-white rounded-xl p-6 shadow">
-        <p class="text-gray-500">Under Repair</p>
-        <p class="text-3xl font-bold mt-2 text-orange-500">{{ underRepair }}</p>
-        <p class="text-orange-500 text-sm mt-1">En maintenance</p>
+    <div class="bg-white rounded-xl p-6 shadow hover:shadow-md transition">
+        <div class="flex justify-between items-start">
+            <div>
+                <p class="text-gray-500 text-sm">En maintenance</p>
+                <p class="text-3xl font-bold mt-2 text-orange-500">{{ underRepair }}</p>
+                <p class="text-orange-400 text-sm mt-1">En réparation</p>
+            </div>
+            <span class="text-3xl">🔧</span>
+        </div>
     </div>
-    <div class="bg-white rounded-xl p-6 shadow">
-    <p class="text-gray-500">Stock Alerts</p>
-    <p class="text-3xl font-bold mt-2 text-red-500">{{ stockAlerts }}</p>
-    <p class="text-red-500 text-sm mt-1">Alertes stock</p>
+    <div class="bg-white rounded-xl p-6 shadow hover:shadow-md transition">
+        <div class="flex justify-between items-start">
+            <div>
+                <p class="text-gray-500 text-sm">Alertes stock</p>
+                <p class="text-3xl font-bold mt-2 text-red-500">{{ stockAlerts }}</p>
+                <p class="text-red-400 text-sm mt-1">Stock faible</p>
+            </div>
+            <span class="text-3xl">⚠️</span>
+        </div>
     </div>
 </div>
 
+{# Raccourcis rapides #}
+<div class="grid grid-cols-4 gap-4 mb-8">
+    <a href="/asset" class="bg-gray-800 text-white rounded-xl p-4 text-center hover:bg-gray-700 transition">
+        <p class="text-2xl mb-1">📦</p>
+        <p class="text-sm font-medium">Voir les assets</p>
+    </a>
+    <a href="/asset/maintenance" class="bg-orange-500 text-white rounded-xl p-4 text-center hover:bg-orange-600 transition">
+        <p class="text-2xl mb-1">🔧</p>
+        <p class="text-sm font-medium">Maintenance</p>
+    </a>
+    <a href="/consumable" class="bg-blue-600 text-white rounded-xl p-4 text-center hover:bg-blue-700 transition">
+        <p class="text-2xl mb-1">🖱️</p>
+        <p class="text-sm font-medium">Consommables</p>
+    </a>
+    <a href="/history" class="bg-purple-600 text-white rounded-xl p-4 text-center hover:bg-purple-700 transition">
+        <p class="text-2xl mb-1">📋</p>
+        <p class="text-sm font-medium">Audit Logs</p>
+    </a>
+</div>
+
+{# Attributions récentes #}
 <div class="bg-white rounded-xl shadow p-6">
-    <h2 class="text-lg font-bold mb-1">Recent Assignments</h2>
-    <p class="text-gray-500 text-sm mb-4">Latest asset assignments to employees</p>
+    <h2 class="text-lg font-bold mb-1">Attributions récentes</h2>
+    <p class="text-gray-500 text-sm mb-4">Dernières attributions de matériel</p>
     <table class="w-full">
         <thead>
             <tr class="text-left text-gray-400 text-sm border-b">
-                <th class="pb-3">EMPLOYEE NAME</th>
-                <th class="pb-3">ASSET MODEL</th>
-                <th class="pb-3">SERIAL NUMBER</th>
+                <th class="pb-3">EMPLOYÉ</th>
+                <th class="pb-3">MATÉRIEL</th>
+                <th class="pb-3">NUMÉRO DE SÉRIE</th>
                 <th class="pb-3">DATE</th>
                 <th class="pb-3">ACTION</th>
             </tr>
@@ -63,7 +105,7 @@
                 <td class="py-4">
                    <a href="{{ path('app_assignment_pdf', {'id': assignment.id}) }}" 
                     class="bg-gray-900 text-white px-3 py-1 rounded text-sm">
-                Download PDF
+                    PDF
                     </a>
                 </td>
             </tr>
@@ -77,26 +119,21 @@
         </tbody>
     </table>
 </div>
+
 {# Statistiques annuelles #}
 <div class="grid grid-cols-2 gap-6 mt-6">
-
-    {# Graphique attributions par mois #}
     <div class="bg-white rounded-xl shadow p-6">
         <h2 class="text-lg font-bold mb-4">Attributions par mois ({{ "now"|date('Y') }})</h2>
         <canvas id="monthlyChart"></canvas>
     </div>
-
-    {# Graphique répartition par statut #}
     <div class="bg-white rounded-xl shadow p-6">
         <h2 class="text-lg font-bold mb-4">Répartition du matériel par statut</h2>
         <canvas id="statusChart"></canvas>
     </div>
-
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // Graphique mensuel
     const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
     new Chart(monthlyCtx, {
         type: 'bar',
@@ -115,7 +152,6 @@
         }
     });
 
-    // Graphique statuts
     const statusCtx = document.getElementById('statusChart').getContext('2d');
     new Chart(statusCtx, {
         type: 'doughnut',
