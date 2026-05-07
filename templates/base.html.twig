@@ -25,12 +25,18 @@
                 <a href="/asset" class="flex items-center px-4 py-3 rounded-lg mb-1 hover:bg-gray-700 text-white">
                     Assets Inventory
                 </a>
-                <a href="{{ path('app_asset_maintenance') }}" class="flex items-center px-4 py-3 rounded-lg mb-1 hover:bg-gray-700 text-white">
-                    Maintenance
-                    </a>
-                <a href="/consumable" class="flex items-center px-4 py-3 rounded-lg mb-1 hover:bg-gray-700 text-white">
-                    Consumables
-                </a>
+               <a href="{{ path('app_asset_maintenance') }}" class="flex items-center justify-between px-4 py-3 rounded-lg mb-1 hover:bg-gray-700 text-white">
+    <span>Maintenance</span>
+    {% if globalMaintenanceCount > 0 %}
+    <span class="bg-orange-500 text-white text-xs px-2 py-0.5 rounded-full">{{ globalMaintenanceCount }}</span>
+    {% endif %}
+</a>
+<a href="/consumable" class="flex items-center justify-between px-4 py-3 rounded-lg mb-1 hover:bg-gray-700 text-white">
+    <span>Consumables</span>
+    {% if globalStockAlerts > 0 %}
+    <span class="bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">{{ globalStockAlerts }}</span>
+    {% endif %}
+</a>
                 <a href="/assignment" class="flex items-center px-4 py-3 rounded-lg mb-1 hover:bg-gray-700 text-white">
                     Assignments
                 </a>
