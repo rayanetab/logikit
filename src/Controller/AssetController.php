@@ -166,4 +166,30 @@ public function transition(Asset $asset, string $transition, \Symfony\Component\
 
 
 
+#[Route('/export/csv', name: 'app_asset_export_csv', methods: ['GET'])]
+public function exportCsv(AssetRepository $assetRepository): Response
+{
+    $assets = $assetRepository->findAll();
+
+    $csv = "ID,Marque,Modèle,Numéro de série,Catégorie,Statut,Date de création,Code barre\n";
+    
+    foreach ($assets as $asset) {
+        $csv .= implode(',', [
+            $asset->getId(),
+            $asset->getBrand(),
+            $asset->getModel(),
+            $asset->getSerialNumber(),
+            $asset->getCategory() ?? 'Non défini',
+            $asset->getStatus(),
+            $asset->getCreatedAt() ? $asset->getCreatedAt()->format('d/m/Y') : '',
+            $asset->getBarcode() ?? '',
+        ]) . "\n";
+    }
+
+    return new Response($csv, 200, [
+        'Content-Type' => 'text/csv',
+        'Content-Disposition' => 'attachment; filename="assets_' . date('Y-m-d') . '.csv"',
+    ]);
+}
+
 }
