@@ -43,6 +43,11 @@
             <option value="category" {% if currentSort == 'category' %}selected{% endif %}>Trier par Catégorie</option>
         </select>
 
+<input type="text" name="search" value="{{ search ?? '' }}" 
+       placeholder="🔍 Rechercher par marque, modèle, série..."
+       class="px-3 py-2 border rounded-lg text-sm w-64">
+
+
         <select name="order" class="px-3 py-2 border rounded-lg text-sm">
             <option value="ASC">Croissant</option>
             <option value="DESC" {% if currentOrder == 'DESC' %}selected{% endif %}>Décroissant</option>

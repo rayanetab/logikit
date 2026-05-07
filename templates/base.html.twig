@@ -59,10 +59,25 @@
                 </div>
             </header>
 
-            {# Page content #}
-            <main class="flex-1 overflow-y-auto p-6">
-                {% block body %}{% endblock %}
-            </main>
+          {# Page content #}
+<main class="flex-1 overflow-y-auto p-6">
+    {# Messages flash #}
+    {% for message in app.flashes('success') %}
+    <div class="bg-green-50 border-l-4 border-green-500 text-green-700 px-6 py-4 rounded-xl mb-4 flex items-center gap-3">
+        <span class="text-xl">✅</span>
+        <p>{{ message }}</p>
+    </div>
+    {% endfor %}
+
+    {% for message in app.flashes('error') %}
+    <div class="bg-red-50 border-l-4 border-red-500 text-red-700 px-6 py-4 rounded-xl mb-4 flex items-center gap-3">
+        <span class="text-xl">❌</span>
+        <p>{{ message }}</p>
+    </div>
+    {% endfor %}
+
+    {% block body %}{% endblock %}
+</main>
         </div>
 
     </div>

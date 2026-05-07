@@ -26,13 +26,33 @@ public function index(AssetRepository $assetRepository, Request $request): Respo
     $status = $request->query->get('status');
     $sort = $request->query->get('sort', 'id');
     $order = $request->query->get('order', 'DESC');
+    $search = $request->query->get('search');
 
     $criteria = [];
     if ($category) $criteria['Category'] = $category;
     if ($status) $criteria['status'] = $status;
 
-    $assets = $assetRepository->findBy($criteria, [$sort => $order], $limit, $offset);
-    $total = count($assetRepository->findBy($criteria));
+if ($search) {
+    $assets = $assetRepository->createQueryBuilder('a')
+        ->where('a.brand LIKE :search OR a.model LIKE :search')
+        ->setParameter('search', '%' . $search . '%')
+        ->orderBy('a.' . $sort, $order)
+        ->setMaxResults($limit)
+        ->setFirstResult($offset)
+        ->getQuery()
+        ->getResult();
+    
+    $total = $assetRepository->createQueryBuilder('a')
+        ->select('COUNT(a.id)')
+        ->where('a.brand LIKE :search OR a.model LIKE :search')
+        ->setParameter('search', '%' . $search . '%')
+        ->getQuery()
+        ->getSingleScalarResult();
+} else {
+        $assets = $assetRepository->findBy($criteria, [$sort => $order], $limit, $offset);
+        $total = count($assetRepository->findBy($criteria));
+    }
+
     $totalPages = ceil($total / $limit);
 
     return $this->render('asset/index.html.twig', [
@@ -43,6 +63,7 @@ public function index(AssetRepository $assetRepository, Request $request): Respo
         'currentStatus' => $status,
         'currentSort' => $sort,
         'currentOrder' => $order,
+        'search' => $search,
     ]);
 }
     #[Route('/new', name: 'app_asset_new', methods: ['GET', 'POST'])]
