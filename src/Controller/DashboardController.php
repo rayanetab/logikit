@@ -38,7 +38,6 @@ class DashboardController extends AbstractController
             }
         }
 
-        // Attributions récentes selon le rôle
         if ($isAdmin) {
             $recentAssignments = $assignmentRepository->findBy([], ['assigned_at' => 'DESC'], 5);
         } else {
@@ -49,7 +48,6 @@ class DashboardController extends AbstractController
             );
         }
 
-        // Statistiques annuelles
         $allAssignments = $assignmentRepository->findAll();
         $monthlyStats = array_fill(1, 12, 0);
         foreach ($allAssignments as $assignment) {
@@ -58,6 +56,18 @@ class DashboardController extends AbstractController
                 $year = (int) $assignment->getAssignedAt()->format('Y');
                 if ($year == date('Y')) {
                     $monthlyStats[$month]++;
+                }
+            }
+        }
+
+        $allAssets = $assetRepository->findAll();
+        $monthlyAssets = array_fill(1, 12, 0);
+        foreach ($allAssets as $asset) {
+            if ($asset->getCreatedAt()) {
+                $month = (int) $asset->getCreatedAt()->format('m');
+                $year = (int) $asset->getCreatedAt()->format('Y');
+                if ($year == date('Y')) {
+                    $monthlyAssets[$month]++;
                 }
             }
         }
@@ -77,6 +87,7 @@ class DashboardController extends AbstractController
             'stockAlerts' => $stockAlerts,
             'recentAssignments' => $recentAssignments,
             'monthlyStats' => array_values($monthlyStats),
+            'monthlyAssets' => array_values($monthlyAssets),
             'statusStats' => $statusStats,
             'isAdmin' => $isAdmin,
             'isManager' => $isManager,

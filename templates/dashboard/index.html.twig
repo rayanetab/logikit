@@ -121,14 +121,18 @@
 </div>
 
 {# Statistiques annuelles #}
-<div class="grid grid-cols-2 gap-6 mt-6">
+<div class="grid grid-cols-3 gap-6 mt-6">
     <div class="bg-white rounded-xl shadow p-6">
         <h2 class="text-lg font-bold mb-4">Attributions par mois ({{ "now"|date('Y') }})</h2>
         <canvas id="monthlyChart"></canvas>
     </div>
-    <div class="bg-white rounded-xl shadow p-6">
+<div class="bg-white rounded-xl shadow p-6">
         <h2 class="text-lg font-bold mb-4">Répartition du matériel par statut</h2>
         <canvas id="statusChart"></canvas>
+    </div>
+    <div class="bg-white rounded-xl shadow p-6">
+        <h2 class="text-lg font-bold mb-4">Assets ajoutés par mois ({{ "now"|date('Y') }})</h2>
+        <canvas id="assetsChart"></canvas>
     </div>
 </div>
 
@@ -170,5 +174,25 @@
         },
         options: { responsive: true }
     });
+    const assetsCtx = document.getElementById('assetsChart').getContext('2d');
+new Chart(assetsCtx, {
+    type: 'line',
+    data: {
+        labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'],
+        datasets: [{
+            label: 'Assets ajoutés',
+            data: {{ monthlyAssets|json_encode|raw }},
+            borderColor: 'rgba(17, 24, 39, 0.8)',
+            backgroundColor: 'rgba(17, 24, 39, 0.1)',
+            borderWidth: 2,
+            fill: true,
+            tension: 0.4,
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: { legend: { display: false } }
+    }
+});
 </script>
 {% endblock %}
