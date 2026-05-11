@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Calendrier des retours - LogiKit{% endblock %}
+
+{% block body %}
+<div class="mb-6">
+    <h1 class="text-2xl font-bold text-gray-800">📅 Calendrier des retours</h1>
+    <p class="text-gray-500">Matériel à retourner prochainement</p>
+</div>
+
+<div class="bg-white rounded-xl shadow p-6">
+    <table class="w-full">
+        <thead>
+            <tr class="text-left text-gray-400 text-sm border-b">
+                <th class="pb-3">EMPLOYÉ</th>
+                <th class="pb-3">MATÉRIEL</th>
+                <th class="pb-3">NUMÉRO DE SÉRIE</th>
+                <th class="pb-3">DATE ATTRIBUTION</th>
+                <th class="pb-3">DATE RETOUR PRÉVUE</th>
+                <th class="pb-3">STATUT</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for assignment in assignments %}
+            <tr class="border-b hover:bg-gray-50">
+                <td class="py-4">{{ assignment.user ? assignment.user.prenom ~ ' ' ~ assignment.user.nom : '-' }}</td>
+                <td class="py-4 font-medium">{{ assignment.asset ? assignment.asset.brand ~ ' ' ~ assignment.asset.model : 'Consommable' }}</td>
+                <td class="py-4">
+                    <span class="bg-gray-100 px-2 py-1 rounded text-sm">
+                        {{ assignment.asset ? assignment.asset.serialNumber : '-' }}
+                    </span>
+                </td>
+                <td class="py-4 text-gray-500">{{ assignment.assignedAt ? assignment.assignedAt|date('d/m/Y') : '' }}</td>
+                <td class="py-4">
+                    <span class="font-medium 
+                        {% if assignment.returnedAt < date() %}text-red-600
+                        {% elseif assignment.returnedAt < date('+7 days') %}text-orange-600
+                        {% else %}text-green-600{% endif %}">
+                        {{ assignment.returnedAt ? assignment.returnedAt|date('d/m/Y') : 'Non définie' }}
+                    </span>
+                </td>
+                <td class="py-4">
+                    {% if assignment.returnedAt < date() %}
+                    <span class="bg-red-100 text-red-800 px-2 py-1 rounded text-sm">En retard</span>
+                    {% elseif assignment.returnedAt < date('+7 days') %}
+                    <span class="bg-orange-100 text-orange-800 px-2 py-1 rounded text-sm">Bientôt</span>
+                    {% else %}
+                    <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">OK</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6" class="text-center text-gray-400 py-8">
+                    Aucun retour prévu
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
