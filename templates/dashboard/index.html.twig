@@ -57,6 +57,33 @@
     </div>
 </div>
 
+{# Stats par catégorie #}
+<div class="bg-white rounded-xl shadow p-6 mb-8">
+    <h2 class="text-lg font-bold mb-4">📦 Répartition par catégorie</h2>
+    <div class="grid grid-cols-5 gap-4">
+        <div class="text-center p-4 bg-gray-50 rounded-xl">
+            <p class="text-2xl font-bold">{{ categoryStats.PC }}</p>
+            <p class="text-gray-500 text-sm mt-1">💻 PC / Laptop</p>
+        </div>
+        <div class="text-center p-4 bg-gray-50 rounded-xl">
+            <p class="text-2xl font-bold">{{ categoryStats.Accessoire }}</p>
+            <p class="text-gray-500 text-sm mt-1">🖱️ Accessoire</p>
+        </div>
+        <div class="text-center p-4 bg-gray-50 rounded-xl">
+            <p class="text-2xl font-bold">{{ categoryStats.Ecran }}</p>
+            <p class="text-gray-500 text-sm mt-1">🖥️ Écran</p>
+        </div>
+        <div class="text-center p-4 bg-gray-50 rounded-xl">
+            <p class="text-2xl font-bold">{{ categoryStats.Telephone }}</p>
+            <p class="text-gray-500 text-sm mt-1">📱 Téléphone</p>
+        </div>
+        <div class="text-center p-4 bg-gray-50 rounded-xl">
+            <p class="text-2xl font-bold">{{ categoryStats.Autre }}</p>
+            <p class="text-gray-500 text-sm mt-1">📦 Autre</p>
+        </div>
+    </div>
+</div>
+
 {# Raccourcis rapides #}
 <div class="grid grid-cols-4 gap-4 mb-8">
     <a href="/asset" class="bg-gray-800 text-white rounded-xl p-4 text-center hover:bg-gray-700 transition">
@@ -193,6 +220,6 @@ new Chart(assetsCtx, {
         responsive: true,
         plugins: { legend: { display: false } }
     }
-});
+})
 </script>
 {% endblock %}

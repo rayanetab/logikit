@@ -80,6 +80,15 @@ class DashboardController extends AbstractController
             'retired' => count($assetRepository->findBy(['status' => 'retired'])),
         ];
 
+        // Stats par catégorie
+$categoryStats = [
+    'PC' => count($assetRepository->findBy(['Category' => 'PC'])),
+    'Accessoire' => count($assetRepository->findBy(['Category' => 'Accessoire'])),
+    'Ecran' => count($assetRepository->findBy(['Category' => 'Ecran'])),
+    'Telephone' => count($assetRepository->findBy(['Category' => 'Telephone'])),
+    'Autre' => count($assetRepository->findBy(['Category' => 'Autre'])),
+];
+
         return $this->render('dashboard/index.html.twig', [
             'totalAssets' => $totalAssets,
             'availableAssets' => $availableAssets,
@@ -91,6 +100,7 @@ class DashboardController extends AbstractController
             'statusStats' => $statusStats,
             'isAdmin' => $isAdmin,
             'isManager' => $isManager,
+            'categoryStats' => $categoryStats,
         ]);
     }
 }
