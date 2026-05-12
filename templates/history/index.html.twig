@@ -3,9 +3,28 @@
 {% block title %}Audit Logs - LogiKit{% endblock %}
 
 {% block body %}
-<div class="mb-6">
-    <h1 class="text-2xl font-bold text-gray-800">Audit Logs</h1>
-    <p class="text-gray-500">Historique complet des actions sur le matériel</p>
+<div class="mb-6 flex justify-between items-center">
+    <div>
+        <h1 class="text-2xl font-bold text-gray-800">Audit Logs</h1>
+        <p class="text-gray-500">Historique complet des actions sur le matériel</p>
+    </div>
+</div>
+
+{# Recherche #}
+<div class="bg-white rounded-xl shadow p-4 mb-6">
+    <form method="GET" class="flex gap-4 items-center">
+        <input type="text" name="search" value="{{ search ?? '' }}" 
+               placeholder="🔍 Rechercher par utilisateur, matériel, action..."
+               class="flex-1 px-4 py-2 border rounded-lg text-sm">
+        <button type="submit" class="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm">
+            Rechercher
+        </button>
+        {% if search %}
+        <a href="{{ path('app_history') }}" class="text-gray-500 text-sm hover:text-gray-700">
+            Réinitialiser
+        </a>
+        {% endif %}
+    </form>
 </div>
 
 <div class="bg-white rounded-xl shadow p-6">
