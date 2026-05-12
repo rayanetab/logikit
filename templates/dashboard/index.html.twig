@@ -29,42 +29,54 @@
 <div class="grid grid-cols-4 gap-6 mb-8">
     <div class="bg-white rounded-xl p-6 shadow hover:shadow-md transition">
         <div class="flex justify-between items-start">
-            <div>
+            <div class="w-full">
                 <p class="text-gray-500 text-sm">Total Matériel</p>
                 <p class="text-3xl font-bold mt-2">{{ totalAssets }}</p>
                 <p class="text-gray-400 text-sm mt-1">Parc informatique</p>
+                <div class="w-full bg-gray-200 rounded-full h-2 mt-3">
+                    <div class="bg-gray-900 h-2 rounded-full" style="width: 100%"></div>
+                </div>
             </div>
-            <span class="text-3xl">💻</span>
+            <span class="text-3xl ml-4">💻</span>
         </div>
     </div>
     <div class="bg-white rounded-xl p-6 shadow hover:shadow-md transition">
         <div class="flex justify-between items-start">
-            <div>
+            <div class="w-full">
                 <p class="text-gray-500 text-sm">Disponibles</p>
                 <p class="text-3xl font-bold mt-2 text-green-500">{{ availableAssets }}</p>
                 <p class="text-green-400 text-sm mt-1">{{ availablePercent }}% du parc</p>
+                <div class="w-full bg-gray-200 rounded-full h-2 mt-3">
+                    <div class="bg-green-500 h-2 rounded-full" style="width: {{ availablePercent }}%"></div>
+                </div>
             </div>
-            <span class="text-3xl">✅</span>
+            <span class="text-3xl ml-4">✅</span>
         </div>
     </div>
     <div class="bg-white rounded-xl p-6 shadow hover:shadow-md transition">
         <div class="flex justify-between items-start">
-            <div>
+            <div class="w-full">
                 <p class="text-gray-500 text-sm">En maintenance</p>
                 <p class="text-3xl font-bold mt-2 text-orange-500">{{ underRepair }}</p>
                 <p class="text-orange-400 text-sm mt-1">En réparation</p>
+                <div class="w-full bg-gray-200 rounded-full h-2 mt-3">
+                    <div class="bg-orange-500 h-2 rounded-full" style="width: {{ totalAssets > 0 ? (underRepair / totalAssets * 100)|round : 0 }}%"></div>
+                </div>
             </div>
-            <span class="text-3xl">🔧</span>
+            <span class="text-3xl ml-4">🔧</span>
         </div>
     </div>
     <div class="bg-white rounded-xl p-6 shadow hover:shadow-md transition">
         <div class="flex justify-between items-start">
-            <div>
+            <div class="w-full">
                 <p class="text-gray-500 text-sm">Alertes stock</p>
                 <p class="text-3xl font-bold mt-2 text-red-500">{{ stockAlerts }}</p>
                 <p class="text-red-400 text-sm mt-1">Stock faible</p>
+                <div class="w-full bg-gray-200 rounded-full h-2 mt-3">
+                    <div class="bg-red-500 h-2 rounded-full" style="width: {{ stockAlerts > 0 ? 100 : 0 }}%"></div>
+                </div>
             </div>
-            <span class="text-3xl">⚠️</span>
+            <span class="text-3xl ml-4">⚠️</span>
         </div>
     </div>
 </div>
