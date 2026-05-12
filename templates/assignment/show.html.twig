@@ -1,34 +1,105 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Assignment{% endblock %}
+{% block title %}Détail attribution - LogiKit{% endblock %}
 
 {% block body %}
-    <h1>Assignment</h1>
+<div class="mb-6 flex justify-between items-center">
+    <div>
+        <h1 class="text-2xl font-bold text-gray-800">Détail de l'attribution</h1>
+        <p class="text-gray-500">Attribution #{{ assignment.id }}</p>
+    </div>
+    <a href="{{ path('app_assignment_pdf', {'id': assignment.id}) }}" 
+       class="bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-700">
+        📄 Télécharger PDF
+    </a>
+</div>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ assignment.id }}</td>
+<div class="grid grid-cols-2 gap-6 mb-6">
+    {# Infos employé #}
+    <div class="bg-white rounded-xl shadow p-6">
+        <h2 class="text-lg font-bold mb-4">👤 Employé</h2>
+        {% if assignment.user %}
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-gray-900 text-white flex items-center justify-center text-lg font-bold">
+                {{ assignment.user.prenom|first }}{{ assignment.user.nom|first }}
+            </div>
+            <div>
+                <p class="font-bold">{{ assignment.user.prenom }} {{ assignment.user.nom }}</p>
+                <p class="text-gray-500 text-sm">{{ assignment.user.email }}</p>
+            </div>
+        </div>
+        {% else %}
+        <p class="text-gray-400">Aucun employé</p>
+        {% endif %}
+    </div>
+
+    {# Infos matériel #}
+    <div class="bg-white rounded-xl shadow p-6">
+        <h2 class="text-lg font-bold mb-4">💻 Matériel</h2>
+        {% if assignment.asset %}
+        <table class="w-full">
+            <tr class="border-b">
+                <th class="py-2 text-left text-gray-500 w-1/2">Marque / Modèle</th>
+                <td class="py-2 font-medium">{{ assignment.asset.brand }} {{ assignment.asset.model }}</td>
+            </tr>
+            <tr class="border-b">
+                <th class="py-2 text-left text-gray-500">Numéro de série</th>
+                <td class="py-2">
+                    <span class="bg-gray-100 px-2 py-1 rounded text-sm">{{ assignment.asset.serialNumber }}</span>
+                </td>
             </tr>
             <tr>
-                <th>Assigned_at</th>
-                <td>{{ assignment.assignedAt ? assignment.assignedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <th class="py-2 text-left text-gray-500">Statut</th>
+                <td class="py-2">
+                    <span class="px-2 py-1 rounded-full text-sm
+                        {% if assignment.asset.status == 'available' %}bg-green-100 text-green-800
+                        {% elseif assignment.asset.status == 'assigned' %}bg-blue-100 text-blue-800
+                        {% elseif assignment.asset.status == 'maintenance' %}bg-orange-100 text-orange-800
+                        {% else %}bg-gray-100 text-gray-800{% endif %}">
+                        {{ assignment.asset.status }}
+                    </span>
+                </td>
             </tr>
-            <tr>
-                <th>Returned_at</th>
-                <td>{{ assignment.returnedAt ? assignment.returnedAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Pdf_filename</th>
-                <td>{{ assignment.pdfFilename }}</td>
-            </tr>
-        </tbody>
-    </table>
+        </table>
+        {% elseif assignment.consumable %}
+        <p class="font-medium">{{ assignment.consumable.name }}</p>
+        <p class="text-gray-500 text-sm">Consommable</p>
+        {% else %}
+        <p class="text-gray-400">Aucun matériel</p>
+        {% endif %}
+    </div>
+</div>
 
-    <a href="{{ path('app_assignment_index') }}">back to list</a>
+{# Dates #}
+<div class="bg-white rounded-xl shadow p-6 mb-6">
+    <h2 class="text-lg font-bold mb-4">📅 Dates</h2>
+    <div class="grid grid-cols-2 gap-6">
+        <div>
+            <p class="text-gray-500 text-sm">Date d'attribution</p>
+            <p class="text-xl font-bold mt-1">{{ assignment.assignedAt ? assignment.assignedAt|date('d/m/Y') : '-' }}</p>
+        </div>
+        <div>
+            <p class="text-gray-500 text-sm">Date de retour prévue</p>
+            <p class="text-xl font-bold mt-1 
+                {% if assignment.returnedAt and assignment.returnedAt < date() %}text-red-500
+                {% elseif assignment.returnedAt %}text-green-500
+                {% else %}text-gray-400{% endif %}">
+                {{ assignment.returnedAt ? assignment.returnedAt|date('d/m/Y') : 'Non définie' }}
+            </p>
+            {% if assignment.returnedAt and assignment.returnedAt < date() %}
+            <span class="bg-red-100 text-red-800 px-2 py-1 rounded text-sm">⏰ En retard</span>
+            {% endif %}
+        </div>
+    </div>
+</div>
 
-    <a href="{{ path('app_assignment_edit', {'id': assignment.id}) }}">edit</a>
-
+<div class="flex gap-3">
+    <a href="{{ path('app_assignment_index') }}" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300">
+        ← Retour à la liste
+    </a>
+    <a href="{{ path('app_assignment_edit', {'id': assignment.id}) }}" class="bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-700">
+        ✏️ Modifier
+    </a>
     {{ include('assignment/_delete_form.html.twig') }}
+</div>
 {% endblock %}
