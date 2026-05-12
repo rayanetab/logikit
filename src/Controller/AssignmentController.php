@@ -42,7 +42,6 @@ public function index(AssignmentRepository $assignmentRepository, Request $reque
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            // Si un asset est sélectionné, changer son statut à "assigned"
             if ($assignment->getAsset() !== null) {
                 $asset = $assignment->getAsset();
                 if ($assetStatusStateMachine->can($asset, 'assign')) {
@@ -50,13 +49,11 @@ public function index(AssignmentRepository $assignmentRepository, Request $reque
                 }
             }
 
-            // Si un consommable est sélectionné, diminuer le stock
             if ($assignment->getConsumable() !== null) {
                 $consumable = $assignment->getConsumable();
                 $consumable->setStockQuantity($consumable->getStockQuantity() - 1);
             }
 
-            // Enregistrer dans l'historique
             $history = new History();
             $history->setUser($this->getUser());
             $history->setAsset($assignment->getAsset());
