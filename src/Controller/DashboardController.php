@@ -80,14 +80,24 @@ class DashboardController extends AbstractController
             'retired' => count($assetRepository->findBy(['status' => 'retired'])),
         ];
 
-        // Stats par catégorie
-$categoryStats = [
-    'PC' => count($assetRepository->findBy(['Category' => 'PC'])),
-    'Accessoire' => count($assetRepository->findBy(['Category' => 'Accessoire'])),
-    'Ecran' => count($assetRepository->findBy(['Category' => 'Ecran'])),
-    'Telephone' => count($assetRepository->findBy(['Category' => 'Telephone'])),
-    'Autre' => count($assetRepository->findBy(['Category' => 'Autre'])),
-];
+        $assignedPercent = $totalAssets > 0 ? round(($statusStats['assigned'] / $totalAssets) * 100) : 0;
+        $availablePercent = $totalAssets > 0 ? round(($statusStats['available'] / $totalAssets) * 100) : 0;
+
+        // Assets en retard de retour
+        $lateReturns = 0;
+        foreach ($allAssignments as $assignment) {
+            if ($assignment->getReturnedAt() !== null && $assignment->getReturnedAt() < new \DateTime()) {
+                $lateReturns++;
+            }
+        }
+
+        $categoryStats = [
+            'PC' => count($assetRepository->findBy(['Category' => 'PC'])),
+            'Accessoire' => count($assetRepository->findBy(['Category' => 'Accessoire'])),
+            'Ecran' => count($assetRepository->findBy(['Category' => 'Ecran'])),
+            'Telephone' => count($assetRepository->findBy(['Category' => 'Telephone'])),
+            'Autre' => count($assetRepository->findBy(['Category' => 'Autre'])),
+        ];
 
         return $this->render('dashboard/index.html.twig', [
             'totalAssets' => $totalAssets,
@@ -101,6 +111,9 @@ $categoryStats = [
             'isAdmin' => $isAdmin,
             'isManager' => $isManager,
             'categoryStats' => $categoryStats,
+            'assignedPercent' => $assignedPercent,
+            'availablePercent' => $availablePercent,
+            'lateReturns' => $lateReturns,
         ]);
     }
 }

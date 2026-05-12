@@ -3,6 +3,18 @@
 {% block title %}Dashboard - LogiKit{% endblock %}
 
 {% block body %}
+
+{# Alerte retard de retour #}
+{% if lateReturns > 0 %}
+<div class="bg-red-50 border-l-4 border-red-500 text-red-700 px-6 py-4 rounded-xl mb-6 flex items-center gap-3">
+    <span class="text-2xl">⏰</span>
+    <div>
+        <p class="font-bold">{{ lateReturns }} retour(s) en retard !</p>
+        <p class="text-sm">Certains matériels auraient dû être retournés. <a href="{{ path('app_calendar') }}" class="underline font-medium">Voir le calendrier</a></p>
+    </div>
+</div>
+{% endif %}
+
 <div class="mb-6 flex justify-between items-center">
     <div>
         <h1 class="text-2xl font-bold text-gray-800">Tableau de bord</h1>
@@ -30,7 +42,7 @@
             <div>
                 <p class="text-gray-500 text-sm">Disponibles</p>
                 <p class="text-3xl font-bold mt-2 text-green-500">{{ availableAssets }}</p>
-                <p class="text-green-400 text-sm mt-1">Prêts à l'attribution</p>
+                <p class="text-green-400 text-sm mt-1">{{ availablePercent }}% du parc</p>
             </div>
             <span class="text-3xl">✅</span>
         </div>
@@ -153,7 +165,7 @@
         <h2 class="text-lg font-bold mb-4">Attributions par mois ({{ "now"|date('Y') }})</h2>
         <canvas id="monthlyChart"></canvas>
     </div>
-<div class="bg-white rounded-xl shadow p-6">
+    <div class="bg-white rounded-xl shadow p-6">
         <h2 class="text-lg font-bold mb-4">Répartition du matériel par statut</h2>
         <canvas id="statusChart"></canvas>
     </div>
@@ -201,25 +213,26 @@
         },
         options: { responsive: true }
     });
+
     const assetsCtx = document.getElementById('assetsChart').getContext('2d');
-new Chart(assetsCtx, {
-    type: 'line',
-    data: {
-        labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'],
-        datasets: [{
-            label: 'Assets ajoutés',
-            data: {{ monthlyAssets|json_encode|raw }},
-            borderColor: 'rgba(17, 24, 39, 0.8)',
-            backgroundColor: 'rgba(17, 24, 39, 0.1)',
-            borderWidth: 2,
-            fill: true,
-            tension: 0.4,
-        }]
-    },
-    options: {
-        responsive: true,
-        plugins: { legend: { display: false } }
-    }
-})
+    new Chart(assetsCtx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'],
+            datasets: [{
+                label: 'Assets ajoutés',
+                data: {{ monthlyAssets|json_encode|raw }},
+                borderColor: 'rgba(17, 24, 39, 0.8)',
+                backgroundColor: 'rgba(17, 24, 39, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4,
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } }
+        }
+    });
 </script>
 {% endblock %}
